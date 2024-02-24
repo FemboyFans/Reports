@@ -1,0 +1,2 @@
+class PostViewCount < ApplicationRecord
+end
