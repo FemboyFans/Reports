@@ -83,7 +83,9 @@ class ViewCounter
     if Cache.redis.exists("vc-rank-json-#{date}") == 1
       JSON.parse(Cache.redis.get("vc-rank-json-#{date}"))
     elsif Cache.redis.exists("vc-rank-#{date}") == 1
-      Cache.redis.zrevrange("vc-rank-#{date}", 0, limit, with_scores: true).to_h
+      Cache.redis.zrevrange("vc-rank-#{date}", 0, limit, with_scores: true)&.map do |rank|
+        { post: rank[0].to_i, count: rank[1].to_i }
+      end || []
     else
       fetch_rank(date)
     end

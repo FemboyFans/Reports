@@ -4,7 +4,7 @@ class PostViewsController < ApplicationController
     case params[:id]
     when "rank"
       @date = Date.parse(params.require(:date).to_s).strftime("%Y%m%d")
-      render json: (ViewCounter.new.get_rank(@date, limit(default: ViewCounter::LIMIT)) || {}).to_json
+      render json: (ViewCounter.new.get_rank(@date, limit(default: ViewCounter::LIMIT)) || []).to_json
 
     when /\A\d+\Z/
       render json: { count: ViewCounter.new.get_count(params[:id]).to_s }
