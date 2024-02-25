@@ -23,4 +23,8 @@ class ApplicationController < ActionController::API
     value, session_id = res.split(",")
     [value.send(cast), session_id]
   end
+
+  def limit(default: 100, min: 1, max: default)
+    params.fetch(:limit, default).to_i.clamp(min..max)
+  end
 end

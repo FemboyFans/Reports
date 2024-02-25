@@ -4,11 +4,11 @@ class MissedSearchCounter
 
   LIMIT = 100
 
-  def rank
+  def rank(limit)
     date = Time.zone.today
     keys = 7.times.map { |x| "msc-#{date.prev_day(x).strftime('%Y%m%d')}" }
     Cache.redis.zunionstore("msc-all", keys)
-    Cache.redis.zrevrange("msc-all", 0, LIMIT, with_scores: true)&.map do |rank|
+    Cache.redis.zrevrange("msc-all", 0, limit, with_scores: true)&.map do |rank|
       { tag: rank[0], count: rank[1].to_i }
     end || []
   end
