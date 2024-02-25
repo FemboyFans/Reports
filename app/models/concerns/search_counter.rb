@@ -17,7 +17,7 @@ class SearchCounter
   end
 
   def get_rank(date, limit)
-    key = "ps-day-#{date.strftime('%Y%m%d')}"
+    key = "ps-day-#{date}"
     Cache.redis.zrevrange(key, 0, limit, with_scores: true)&.map do |rank|
       { tag: rank[0], count: rank[1].to_i }
     end || []
