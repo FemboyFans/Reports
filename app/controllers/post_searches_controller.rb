@@ -1,5 +1,4 @@
 class PostSearchesController < ApplicationController
-
   def show
     if params[:id] == "rank"
       @date = Date.parse(params.require(:date).to_s).strftime("%Y-%m-%d")

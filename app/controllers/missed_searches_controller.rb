@@ -1,5 +1,4 @@
 class MissedSearchesController < ApplicationController
-
   def show
     if params[:id] == "rank"
       render json: (MissedSearchCounter.new.rank(limit(default: MissedSearchCounter::LIMIT)) || []).to_json

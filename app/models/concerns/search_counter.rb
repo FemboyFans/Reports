@@ -43,10 +43,11 @@ class SearchCounter
     tags = normalize_tags(tags)
     code = hash(tags)
     today = Time.now.strftime("%Y-%m-%d")
-    week = Time.now.to_i / (60 * 60 * 24 * 7)
+    Time.now.to_i
+    (60 * 60 * 24 * 7)
 
     if Cache.redis.pfadd("ps-#{code}-#{today}", session_id)
-      month = Time.now.strftime("%Y-%m")
+      Time.now.strftime("%Y-%m")
 
       Cache.redis.pipelined do
         Cache.redis.expire("ps-#{code}-#{today}", 2.days)

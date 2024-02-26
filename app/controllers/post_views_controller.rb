@@ -1,5 +1,4 @@
 class PostViewsController < ApplicationController
-
   def show
     case params[:id]
     when "rank"
