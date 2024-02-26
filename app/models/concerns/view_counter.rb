@@ -59,7 +59,7 @@ class ViewCounter
   end
 
   def date_key
-    @date_key ||= format_date(Time.now)
+    @date_key ||= Time.now.strftime("%Y-%m-%d")
   end
 
   def unique?(post_id, session_id)
@@ -108,13 +108,8 @@ class ViewCounter
     Cache.redis.setex("udb-rank", 60, "1")
   end
 
-  def format_date(date)
-    return date unless date.is_a?(Time)
-    date.strftime("%Y-%m-%d")
-  end
-
   def fetch_rank(date)
-    item = PostViewSummary.find_by("date = '#{format_date(date)}'")
+    item = PostViewSummary.find_by("date = '#{date}'")
     if item
       assign_redis_rank(date, item.data.to_json)
       item.data

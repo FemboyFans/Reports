@@ -16,7 +16,7 @@ class MissedSearchCounter
   def count!(tags, session_id)
     tags = normalize_tags(tags)
     code = hash(tags)
-    today = Time.now.strftime("%Y%m%d")
+    today = Time.now.strftime("%Y-%m-%d")
 
     if Cache.redis.pfadd("msc-#{code}-#{today}", session_id)
       Cache.redis.pipelined do
