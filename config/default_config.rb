@@ -17,7 +17,7 @@ module Reports
     end
 
     def redis_url
-      "redis://redis"
+      "redis://redis/1"
     end
   end
 
