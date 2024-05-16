@@ -20,5 +20,5 @@ test:
 production:
   <<: *default
   database: reports
-  pool: <%= ENV.fetch("DB_POOL_SIZE") %>
+  pool: <%= ENV.fetch("DB_POOL_SIZE", 5) %>
 <% end %>
