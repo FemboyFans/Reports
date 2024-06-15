@@ -27,10 +27,10 @@ COPY --from=ruby-builder /usr/local/bundle /usr/local/bundle
 # Create a user with (potentially) the same id as on the host
 ARG HOST_UID=1000
 ARG HOST_GID=1000
-RUN addgroup --gid ${HOST_GID} pawsmovin && \
-  adduser -S --shell /bin/sh --uid ${HOST_UID} pawsmovin && \
-  addgroup pawsmovin wheel && \
-  echo "pawsmovin ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN addgroup --gid ${HOST_GID} femboyfans && \
+  adduser -S --shell /bin/sh --uid ${HOST_UID} femboyfans && \
+  addgroup femboyfans wheel && \
+  echo "femboyfans ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Ignore warnings from git about .git permission differences when running as root
 RUN git config --global --add safe.directory $(pwd)

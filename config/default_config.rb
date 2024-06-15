@@ -5,11 +5,11 @@ module Reports
     end
 
     def domain
-      "r.pawsmov.in"
+      "r.femboy.fan"
     end
 
     def source_code_url
-      "https://github.com/PawsMovin/Reports"
+      "https://github.com/FemboyFans/Reports"
     end
 
     def report_key

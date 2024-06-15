@@ -1,7 +1,7 @@
 default: &default
   adapter: postgresql
   timeout: 5000
-  username: <%= ENV.fetch("DB_USER", "pawsmovin") %>
+  username: <%= ENV.fetch("DB_USER", "femboyfans") %>
   password: <%= ENV.fetch("DB_PASSWORD", "") %>
   host: <%= ENV.fetch("DB_HOST", "postgres") %>
   port: <%= ENV.fetch("DB_PORT", 5432) %>
