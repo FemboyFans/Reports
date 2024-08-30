@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "migrate": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node  /app/dist/migrate.js",
-    "up": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node  /app/dist/server.js",
-    "start": "npm run migrate && npm run up"
+    "migrate": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node /app/dist/migrate.js",
+    "start": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node /app/dist/server.js"
   },
   "repository": {
     "type": "git",
