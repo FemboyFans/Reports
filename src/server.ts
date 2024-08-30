@@ -15,10 +15,47 @@ import FastifyMiddleware from "@fastify/middie";
 import FastifyJWT from "@fastify/jwt";
 import { type JwtPayload } from "jsonwebtoken";
 import fastifyCors from "@fastify/cors";
+import Logger from "@uwu-codes/logger";
 
+
+class FastifyLog {
+    static level = "info";
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static child(_bindings: unknown, _childLoggerOpts: unknown): typeof FastifyLog {
+        return FastifyLog;
+    }
+
+    static debug(msg: unknown): void {
+        Logger.debug(msg);
+    }
+
+    static error(msg: unknown): void {
+        Logger.error(msg);
+    }
+
+    static fatal(msg: unknown): void {
+        Logger.error(msg);
+    }
+
+    static info(msg: unknown): void {
+        Logger.info(msg);
+    }
+
+    static silent(msg: unknown): void {
+        Logger.debug(msg);
+    }
+
+    static trace(msg: unknown): void {
+        Logger.debug(msg);
+    }
+
+    static warn(msg: unknown): void {
+        Logger.warn(msg);
+    }
+}
 
 const app = await Fastify({
-    logger:     true,
+    logger:     FastifyLog,
     trustProxy: true
 });
 await app.register(FastifyMiddleware);
