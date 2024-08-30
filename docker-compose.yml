@@ -1,0 +1,19 @@
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest-alpine
+    cap_add:
+      - NET_ADMIN
+      - IPC_LOCK
+      - SYS_NICE
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+      - db_data:/var/lib/clickhouse
+      - ./init:/docker-entrypoint-initdb.d
+    labels:
+      - "hostname=clickhouse.containers.local"
+
+volumes:
+  db_data:

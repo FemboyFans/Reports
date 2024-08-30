@@ -1,0 +1,49 @@
+{
+  "name": "reports",
+  "version": "1.0.0",
+  "description": "View reports server for https://femboy.fan",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "migrate": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node  /app/dist/migrate.js",
+    "up": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node  /app/dist/server.js",
+    "start": "npm run migrate && npm run up"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FemboyFan/Reports.git"
+  },
+  "author": "Donovan_DMC <hewwo@yiff.rocks>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FemboyFan/Reports/issues"
+  },
+  "homepage": "https://github.com/FemboyFan/Reports#readme",
+  "dependencies": {
+    "@clickhouse/client": "^1.5.0",
+    "@fastify/cors": "^9.0.1",
+    "@fastify/jwt": "^8.0.1",
+    "@fastify/middie": "^8.3.1",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^22.5.1",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-import-newlines": "^1.4.0",
+    "eslint-plugin-jsdoc": "^48.2.3",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-unicorn": "^52.0.0",
+    "eslint-plugin-unused-imports": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "type": "module"
+}

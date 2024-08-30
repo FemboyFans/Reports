@@ -1,2 +1,0 @@
-class PostViewCount < ApplicationRecord
-end

@@ -1,2 +1,0 @@
-class PostViewSummary < ApplicationRecord
-end
