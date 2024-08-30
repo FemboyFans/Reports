@@ -15,48 +15,14 @@ import FastifyMiddleware from "@fastify/middie";
 import FastifyJWT from "@fastify/jwt";
 import { type JwtPayload } from "jsonwebtoken";
 import fastifyCors from "@fastify/cors";
-import Logger from "@uwu-codes/logger";
-
-
-class FastifyLog {
-    static level = "info";
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static child(_bindings: unknown, _childLoggerOpts: unknown): typeof FastifyLog {
-        return FastifyLog;
-    }
-
-    static debug(msg: unknown): void {
-        Logger.debug(msg);
-    }
-
-    static error(msg: unknown): void {
-        Logger.error(msg);
-    }
-
-    static fatal(msg: unknown): void {
-        Logger.error(msg);
-    }
-
-    static info(msg: unknown): void {
-        Logger.info(msg);
-    }
-
-    static silent(msg: unknown): void {
-        Logger.debug(msg);
-    }
-
-    static trace(msg: unknown): void {
-        Logger.debug(msg);
-    }
-
-    static warn(msg: unknown): void {
-        Logger.warn(msg);
-    }
-}
 
 const app = await Fastify({
-    logger:     FastifyLog,
-    trustProxy: true
+    logger: {
+        level:     "info",
+        transport: {
+            target: "pino-pretty"
+        }
+    }
 });
 await app.register(FastifyMiddleware);
 await app.register(FastifyJWT, {
@@ -259,4 +225,4 @@ app.get("/searches/missed/rank", async (request, reply) => {
 await app.listen({
     host: "0.0.0.0",
     port: 3000
-}).then(host => console.log("Listening on %s", host));
+});
