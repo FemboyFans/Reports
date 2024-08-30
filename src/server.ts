@@ -22,7 +22,8 @@ const app = await Fastify({
         transport: {
             target: "pino-pretty"
         }
-    }
+    },
+    trustProxy: true
 });
 await app.register(FastifyMiddleware);
 await app.register(FastifyJWT, {
