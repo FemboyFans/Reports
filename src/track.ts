@@ -43,7 +43,7 @@ export async function getPostViewRank(dates: Array<string>, limit = 50): Promise
 
 export async function getPostViewsBulk(posts: Array<number>, date?: string): Promise<Array<{ count: number; post: number; }>> {
     const r = await client.query({
-        query:        `SELECT post_id, COUNT(*) as view_count FROM post_views WHERE post_id IN ({posts:Array(UInt64)}) AND date = ${date ? "{date:Date}" : "today()"} GROUP BY post_id LIMIT 100`,
+        query:        `SELECT post_id, COUNT(*) as view_count FROM post_views WHERE post_id IN ({posts:Array(UInt64)})${date ? " AND date = {date:Date}" : ""} GROUP BY post_id LIMIT 100`,
         query_params: { posts, date },
         format:       "JSON"
     });
