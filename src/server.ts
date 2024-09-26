@@ -74,7 +74,7 @@ app.get("/views/rank", async (request, reply) => {
     }
     const limit = qparams.limit ? Number(qparams.limit) : 50;
 
-    return reply.status(200).send({ data: await getPostViewRank(dates, limit), success: true });
+    return reply.status(200).send({ data: await getPostViewRank(dates, limit, qparams.unique === "true"), success: true });
 });
 
 app.get("/views/bulk", async (request, reply) => {
@@ -91,7 +91,7 @@ app.get("/views/bulk", async (request, reply) => {
     }
     posts = posts.slice(0, 100);
 
-    const data = await getPostViewsBulk(posts, qparams.date as string);
+    const data = await getPostViewsBulk(posts, qparams.date as string, qparams.unique === "true");
     for (const post of posts) {
         if (!data.some(v => v.post === post)) {
             data.push({ post, count: 0 });
@@ -109,7 +109,7 @@ app.get("/views/:id", async (request, reply) => {
         return reply.status(400).send({ error: "Invalid post ID", success: false });
     }
 
-    const res = await getViewCount(id, qparams.date as string);
+    const res = await getViewCount(id, qparams.date as string, qparams.unique === "true");
     return reply.status(200).send({ data: res, success: true });
 });
 

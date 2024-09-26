@@ -31,9 +31,9 @@ export async function logPostView(post_id: number, ip_address: string): Promise<
     return r.executed;
 }
 
-export async function getPostViewRank(dates: Array<string>, limit = 50): Promise<Array<{ count: number; post: number; }>> {
+export async function getPostViewRank(dates: Array<string>, limit = 50, unique = false): Promise<Array<{ count: number; post: number; }>> {
     const r = await client.query({
-        query:        "SELECT post_id, COUNT(*) as view_count FROM post_views WHERE date IN ({dates:Array(Date)}) GROUP BY post_id ORDER BY view_count DESC LIMIT {limit:UInt64}",
+        query:        `SELECT post_id, COUNT(${unique ? "DISTINCT ip_address" : ""}) as view_count FROM post_views WHERE date IN ({dates:Array(Date)}) GROUP BY post_id ORDER BY view_count DESC LIMIT {limit:UInt64}`,
         query_params: { dates, limit },
         format:       "JSON"
     });
@@ -41,9 +41,9 @@ export async function getPostViewRank(dates: Array<string>, limit = 50): Promise
     return (await r.json<{ post_id: string; view_count: string; }>()).data.map(v => ({ post: Number(v.post_id), count: Number(v.view_count) }));
 }
 
-export async function getPostViewsBulk(posts: Array<number>, date?: string): Promise<Array<{ count: number; post: number; }>> {
+export async function getPostViewsBulk(posts: Array<number>, date?: string, unique = false): Promise<Array<{ count: number; post: number; }>> {
     const r = await client.query({
-        query:        `SELECT post_id, COUNT(*) as view_count FROM post_views WHERE post_id IN ({posts:Array(UInt64)})${date ? " AND date = {date:Date}" : ""} GROUP BY post_id LIMIT 100`,
+        query:        `SELECT post_id, COUNT(${unique ? "DISTINCT ip_address" : ""}) as view_count FROM post_views WHERE post_id IN ({posts:Array(UInt64)})${date ? " AND date = {date:Date}" : ""} GROUP BY post_id LIMIT 100`,
         query_params: { posts, date },
         format:       "JSON"
     });
@@ -82,13 +82,13 @@ export async function checkPostView(post_id: number, ip_address: string): Promis
     return ((await r.json()).rows ?? 0) !== 0;
 }
 
-export async function getViewCount(post_id: number, date?: string): Promise<number> {
+export async function getViewCount(post_id: number, date?: string, unique = false): Promise<number> {
     const r = await Redis.get(`post_views:${post_id}${date ? `:${date}` : ""}`);
     if (r !== null) {
         return Number(r);
     }
     const q = await client.query({
-        query:        `SELECT COUNT(*) FROM post_views WHERE post_id = {post_id:UInt64}${date ? " AND date = {date:Date}" : ""}`,
+        query:        `SELECT COUNT(${unique ? "DISTINCT ip_address" : ""}) FROM post_views WHERE post_id = {post_id:UInt64}${date ? " AND date = {date:Date}" : ""}`,
         query_params: { post_id, date },
         format:       "JSON"
     });
