@@ -18,10 +18,7 @@ import fastifyCors from "@fastify/cors";
 
 const app = await Fastify({
     logger: {
-        level:     "info",
-        transport: {
-            target: "pino-pretty"
-        }
+        level: "info"
     },
     trustProxy: true
 });
@@ -37,7 +34,7 @@ await app.register(fastifyCors, {
 });
 
 app.addHook("onRequest", async (request, reply) => {
-    if (request.method === "OPTIONS") {
+    if (request.method === "OPTIONS" || request.url === "/up") {
         return;
     }
     try {
@@ -222,6 +219,8 @@ app.get("/searches/missed/rank", async (request, reply) => {
 
     return reply.status(200).send({ data: await getMissedSearchRank(dates, limit), success: true });
 });
+
+app.get("/up", async(request, reply) => reply.status(204).send());
 
 await app.listen({
     host: "0.0.0.0",
