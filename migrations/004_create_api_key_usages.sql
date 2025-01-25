@@ -1,5 +1,5 @@
 CREATE TABLE api_key_usages (
-    date Date DEFAULT today(),
+    date DateTime DEFAULT now(),
     key_id UInt32,
     controller String,
     action String,
