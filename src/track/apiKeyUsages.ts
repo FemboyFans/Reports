@@ -24,6 +24,16 @@ async function getApiKeyUsages(key_id: number, dates?: Array<string>, limit = 10
     return (await r.json<{ action: string; controller: string; date: string; ip_address: string; method: string; request_uri: string; }>()).data.map(v => ({ action: v.action, controller: v.controller, date: v.date, ip_address: unconvertIPAddress(v.ip_address), method: v.method, request_uri: v.request_uri }));
 }
 
+async function countApiKeyUsages(key_id: number, dates?: Array<string>): Promise<number> {
+    const r = await client.query({
+        query:        `SELECT COUNT(*) as count FROM api_key_usages WHERE key_id = {key_id:UInt32}${dates ? " AND date IN ({dates:Array(Date)})" : ""}`,
+        query_params: { key_id, dates },
+        format:       "JSON"
+    });
+
+    return (await r.json<{ count: number; }>()).data[0].count;
+}
+
 
 export function registerRoutes(app: FastiyServer): void {
     app.post("/api_key_usages", async (request, reply) => {
@@ -57,6 +67,9 @@ export function registerRoutes(app: FastiyServer): void {
         const limit = qparams.limit ? Number(qparams.limit) : 50;
         const page = qparams.page ? Number(qparams.page) : 1;
 
-        return reply.status(200).send({ data: await getApiKeyUsages(id, dates, limit, page), success: true });
+        const data = await getApiKeyUsages(id, dates, limit, page);
+        const count = await countApiKeyUsages(id, dates);
+
+        return reply.status(200).send({ count, data, success: true });
     });
 }
