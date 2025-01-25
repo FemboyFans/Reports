@@ -26,7 +26,7 @@ async function getApiKeyUsages(key_id: number, dates?: Array<string>, limit = 10
 
 async function countApiKeyUsages(key_id: number, dates?: Array<string>): Promise<number> {
     const r = await client.query({
-        query:        `SELECT COUNT(*) as count FROM api_key_usages WHERE key_id = {key_id:UInt32}${dates ? " AND date IN ({dates:Array(Date)})" : ""}`,
+        query:        `SELECT COUNT(*) as count FROM api_key_usages WHERE key_id = {key_id:UInt32}${dates?.length ? " AND date IN ({dates:Array(Date)})" : ""}`,
         query_params: { key_id, dates },
         format:       "JSON"
     });
