@@ -21,7 +21,7 @@ async function getApiKeyUsages(key_id: number, dates?: Array<string>, limit = 10
         format:       "JSON"
     });
 
-    return (await r.json<{ action: string; controller: string; date: string; ip_address: string; method: string; request_uri: string; }>()).data.map(v => ({ action: v.action, controller: v.controller, date: v.date, ip_address: unconvertIPAddress(v.ip_address), method: v.method, request_uri: v.request_uri }));
+    return (await r.json<{ action: string; controller: string; date: string; ip_address: string; method: string; request_uri: string; }>()).data.map(v => ({ action: v.action, controller: v.controller, date: new Date(v.date).toISOString(), ip_address: unconvertIPAddress(v.ip_address), method: v.method, request_uri: v.request_uri }));
 }
 
 async function countApiKeyUsages(key_id: number, dates?: Array<string>): Promise<number> {
