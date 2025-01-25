@@ -16,7 +16,7 @@ async function logApiKeyUsage(key_id: number, controller: string, action: string
 
 async function getApiKeyUsages(key_id: number, dates?: Array<string>, limit = 100, page = 1): Promise<Array<{ action: string; controller: string; date: string; ip_address: string; method: string; request_uri: string; }>> {
     const r = await client.query({
-        query:        `SELECT date, controller, action, method, request_uri, ip_address FROM api_key_usages WHERE key_id = {key_id:UInt32}${dates?.length ? " AND date IN ({dates:Array(Date)})" : ""} LIMIT {limit:UInt64} OFFSET {offset:UInt64}`,
+        query:        `SELECT date, controller, action, method, request_uri, ip_address FROM api_key_usages WHERE key_id = {key_id:UInt32}${dates?.length ? " AND date IN ({dates:Array(Date)})" : ""} ORDER BY date DESC LIMIT {limit:UInt64} OFFSET {offset:UInt64}`,
         query_params: { key_id, dates, limit, offset: (page - 1) * limit },
         format:       "JSON"
     });
