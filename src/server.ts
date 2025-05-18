@@ -50,8 +50,8 @@ registerMissedSearchesRoutes(app);
 registerPostViewsRoutes(app);
 registerSearchesRoutes(app);
 
-app.get("/up", async(request, reply) => reply.status(204).send());
-app.get("/stats", async(request, reply) => {
+app.get("/up", async(_request, reply) => reply.status(204).send());
+app.get("/stats", async(_request, reply) => {
     const viewCount = Number((await (await client.query({
         query:  "SELECT COUNT(*) as count FROM post_views",
         format: "JSON"
