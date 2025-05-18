@@ -68,19 +68,19 @@ app.get("/stats", async(request, reply) => {
         query:  "SELECT version FROM versions ORDER BY version DESC LIMIT 1",
         format: "JSON"
     })).json<{ version: string; }>()).data[0].version);
-    const clickhouseVersion = (await (await client.query({
+    const dbVersion = (await (await client.query({
         query:  "SELECT value as version FROM system.build_options WHERE name = 'VERSION_DESCRIBE'",
         format: "JSON"
     })).json<{ version: string; }>()).data[0].version;
     const ping = await client.ping();
     return reply.status(200).send({
-        missedSearchCount,
-        searchCount,
         viewCount,
+        searchCount,
+        missedSearchCount,
         schemaVersion,
-        clickhouseVersion,
+        dbVersion,
         healthy: ping.success,
-        error:   ping.success ? undefined : `${ping.error.name}: ${ping.error.message}`
+        error:   ping.success ? null : `${ping.error.name}: ${ping.error.message}`
     });
 });
 
