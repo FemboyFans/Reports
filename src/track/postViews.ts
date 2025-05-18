@@ -26,9 +26,9 @@ async function logPostView(post_id: number, ip_address: string): Promise<boolean
     return r.executed;
 }
 
-async function getPostViewRank(dates: Array<string>, limit = 50, unique = false): Promise<Array<{ count: number; post: number; }>> {
+async function getPostViewRank(dates?: Array<string>, limit = 50, unique = false): Promise<Array<{ count: number; post: number; }>> {
     const r = await client.query({
-        query:        `SELECT post_id, COUNT(${unique ? "DISTINCT ip_address" : ""}) as view_count FROM post_views WHERE date IN ({dates:Array(Date)}) GROUP BY post_id ORDER BY view_count DESC LIMIT {limit:UInt64}`,
+        query:        `SELECT post_id, COUNT(${unique ? "DISTINCT ip_address" : ""}) as view_count FROM post_views ${dates ? "WHERE date IN ({dates:Array(Date)}) " : ""} GROUP BY post_id ORDER BY view_count DESC LIMIT {limit:UInt64}`,
         query_params: { dates, limit },
         format:       "JSON"
     });
@@ -103,6 +103,13 @@ export function registerRoutes(app: FastiyServer): void {
         const limit = qparams.limit ? Number(qparams.limit) : 50;
 
         return reply.status(200).send({ data: await getPostViewRank(dates, limit, qparams.unique === "true"), success: true });
+    });
+
+    app.get("/views/top", async (request, reply) => {
+        const qparams = request.query as Record<string, unknown>;
+        const limit = qparams.limit ? Number(qparams.limit) : 50;
+
+        return reply.status(200).send({ data: await getPostViewRank(undefined, limit, qparams.unique === "true"), success: true });
     });
 
     app.get("/views/bulk", async (request, reply) => {

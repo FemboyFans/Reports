@@ -22,9 +22,9 @@ async function logMissedSearch(tags: Array<string>, page: number): Promise<boole
     return q.executed;
 }
 
-async function getMissedSearchRank(dates: Array<string>, limit = 50): Promise<Array<{ count: number; tag: string; }>> {
+async function getMissedSearchRank(dates?: Array<string>, limit = 50): Promise<Array<{ count: number; tag: string; }>> {
     const r = await client.query({
-        query:        "SELECT tags, COUNT(*) as count FROM missed_searches WHERE date IN ({dates:Array(Date)}) AND length(tags) = 1 GROUP BY tags ORDER BY count DESC LIMIT {limit:UInt64}",
+        query:        `SELECT tags, COUNT(*) as count FROM missed_searches WHERE ${dates ? "date IN ({dates:Array(Date)}) AND " : ""}length(tags) = 1 GROUP BY tags ORDER BY count DESC LIMIT {limit:UInt64}`,
         query_params: { dates, limit },
         format:       "JSON"
     });
@@ -77,5 +77,12 @@ export function registerRoutes(app: FastiyServer): void {
         const limit = qparams.limit ? Number(qparams.limit) : 50;
 
         return reply.status(200).send({ data: await getMissedSearchRank(dates, limit), success: true });
+    });
+
+    app.get("/searches/missed/top", async (request, reply) => {
+        const qparams = request.query as Record<string, unknown>;
+        const limit = qparams.limit ? Number(qparams.limit) : 50;
+
+        return reply.status(200).send({ data: await getMissedSearchRank(undefined, limit), success: true });
     });
 }
