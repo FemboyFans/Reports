@@ -29,7 +29,7 @@ async function getMissedSearchRank(dates?: Array<string>, limit = 50): Promise<A
         format:       "JSON"
     });
 
-    return (await r.json<{ count: string; tags: Array<string>; }>()).data.map(v => ({ tag: v.tags[0], count: Number(v.count) }));
+    return (await r.json<{ count: string; tags: Array<string>; }>()).data.map(v => ({ tag: v.tags[0].toLowerCase(), count: Number(v.count) }));
 }
 
 export function registerRoutes(app: FastiyServer): void {
