@@ -24,12 +24,12 @@ async function logSearch(tags: Array<string>, page: number): Promise<boolean> {
 
 async function getSearchRank(dates?: Array<string>, limit = 50): Promise<Array<{ count: number; tag: string; }>> {
     const r = await client.query({
-        query:        `SELECT tags, COUNT(*) as count FROM post_searches WHERE ${dates ? "date IN ({dates:Array(Date)}) AND " : ""}length(tags) = 1 GROUP BY tags ORDER BY count DESC LIMIT {limit:UInt64}`,
+        query:        `SELECT arrayMap(x -> lower(x), tags) as tags, COUNT(*) as count FROM post_searches WHERE ${dates ? "date IN ({dates:Array(Date)}) AND " : ""}length(tags) = 1 GROUP BY tags ORDER BY count DESC LIMIT {limit:UInt64}`,
         query_params: { dates, limit },
         format:       "JSON"
     });
 
-    return (await r.json<{ count: string; tags: Array<string>; }>()).data.map(v => ({ tag: v.tags[0].toLowerCase(), count: Number(v.count) }));
+    return (await r.json<{ count: string; tags: Array<string>; }>()).data.map(v => ({ tag: v.tags[0], count: Number(v.count) }));
 }
 
 export function registerRoutes(app: FastiyServer): void {
