@@ -84,7 +84,7 @@ app.get("/stats", async(_request, reply) => {
         format: "JSON"
     });
     const end = process.hrtime.bigint();
-    const latency = Number(end - start) / 1e6;
+    const latency = Math.round(Number(end - start) / 1e6 * 100) / 100;
     return reply.status(200).send({
         date,
         dbDate,
