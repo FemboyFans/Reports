@@ -56,7 +56,7 @@ app.get("/stats", async(_request, reply) => {
     const dbDate = (await (await client.query({
         query:  "SELECT UTC_timestamp() as date",
         format: "JSON"
-    })).json<{ date: string; }>()).data[0].date;
+    })).json<{ date: string; }>()).data[0].date.replace(" ", "T") + "Z";
     const viewCount = Number((await (await client.query({
         query:  "SELECT COUNT(*) as count FROM post_views",
         format: "JSON"
