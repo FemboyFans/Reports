@@ -78,6 +78,13 @@ app.get("/stats", async(_request, reply) => {
         format: "JSON"
     })).json<{ version: string; }>()).data[0].version;
     const ping = await client.ping();
+    const start = process.hrtime.bigint();
+    await client.query({
+        query:  "SELECT 1",
+        format: "JSON"
+    });
+    const end = process.hrtime.bigint();
+    const latency = Number(end - start) / 1e6;
     return reply.status(200).send({
         date,
         dbDate,
@@ -86,6 +93,7 @@ app.get("/stats", async(_request, reply) => {
         missedSearchCount,
         schemaVersion,
         dbVersion,
+        latency,
         healthy: ping.success,
         error:   ping.success ? null : `${ping.error.name}: ${ping.error.message}`
     });
