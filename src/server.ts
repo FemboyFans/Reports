@@ -52,6 +52,11 @@ registerSearchesRoutes(app);
 
 app.get("/up", async(_request, reply) => reply.status(204).send());
 app.get("/stats", async(_request, reply) => {
+    const date = new Date().toISOString();
+    const dbDate = (await (await client.query({
+        query:  "SELECT UTC_timestamp() as date",
+        format: "JSON"
+    })).json<{ date: string; }>()).data[0].date;
     const viewCount = Number((await (await client.query({
         query:  "SELECT COUNT(*) as count FROM post_views",
         format: "JSON"
@@ -74,6 +79,8 @@ app.get("/stats", async(_request, reply) => {
     })).json<{ version: string; }>()).data[0].version;
     const ping = await client.ping();
     return reply.status(200).send({
+        date,
+        dbDate,
         viewCount,
         searchCount,
         missedSearchCount,
